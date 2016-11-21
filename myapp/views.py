@@ -16,6 +16,16 @@ from django.core.urlresolvers import reverse
 
 @login_required(login_url="/view_login")
 def perform_review(request):
+    """
+    Initiate the interview process. Do initializations for interview and
+    necessary checks to avoid multiple interview generations for a
+    candidate.
+
+    :param request: http request object
+            qid: question id for the question selected by user
+    :return None:
+
+    """
 
     cid = request.POST.get("candidate_id")
     print "candidate id " + str(cid)
@@ -62,6 +72,14 @@ def perform_review(request):
 
 
 def freeze_review(request):
+    """
+    Enable user to freeze an interview. User can further give
+    ask questions for that specific interview
+
+    :param request: http request object
+    :return None:
+
+      """
     review_id = request.GET.get("review_id")
     review = Interview.objects.get(id=review_id)
     review.status = "closed"
@@ -76,7 +94,6 @@ def freeze_review(request):
 
 @login_required(login_url="/view_login")
 def view_start_review(request, review_id):
-
     """
     Enable user to view dashboard. Handles both functionality of listing
     topics and subtopics
@@ -116,6 +133,13 @@ def view_start_review(request, review_id):
     return render(request, 'myapp/start_review.html', dict)
 
 def view_my_reviews(request):
+    """
+    Enable user to view his/her reviews for a candidate
+
+    :param request:
+    :return None:
+
+    """
     review_list = Interview.objects.filter(user_id=request.user.id)
     print review_list
     return render(request, 'myapp/review_list.html', {
@@ -125,6 +149,15 @@ def view_my_reviews(request):
 
 
 def view_candidate_review(request, review_id):
+    """
+    Enable user to view a specific review of a candidate
+
+    :param request: http request object
+         review_id : Interview id for that candidate
+    :return None:
+
+    """
+
     rating_choice = ['',
                      'Not Answered',
                      'Bad',
@@ -145,6 +178,13 @@ def view_candidate_review(request, review_id):
 
 def view_all_reviews(request):
 
+    """
+    Enable user to list of all interviews conducted by him/her
+
+    :param request: http request object
+    :return None:
+
+    """
     review_list = Interview.objects.all()
 
     return render(request, 'myapp/review_list.html', {
@@ -155,12 +195,13 @@ def view_all_reviews(request):
 @login_required(login_url="/view_login")
 def questions_list(request):
     """
-    Enable user to view questions for a sub topic.
+    Enable user to view questions for a sub topic as a list.
 
     :param request:
     :return None:
 
     """
+
     dict = {}
 
     sub_topic_id=0
@@ -297,6 +338,15 @@ def save_response(request, qid):
 
 @login_required(login_url="/view_login")
 def view_question_response(request, qid):
+    """
+    Enable user to view his/her question response
+
+    :param request: http request object
+            qid: question id for the question selected by user
+    :return None:
+
+    """
+
     rating_choice = ['',
                      'Not Answered',
                      'Bad',
@@ -306,7 +356,8 @@ def view_question_response(request, qid):
                      ]
 
     review_id = request.GET.get("review_id")
-    response = QuestionResponse.objects.get(question_id=qid,interview_id=review_id)
+    response = QuestionResponse.objects.get(question_id=qid,
+                                            interview_id=review_id)
     dict = {}
 
     dict["question"] = response.question
@@ -375,7 +426,6 @@ def view_login(request):
     return render_to_response('myapp/view_login.html', {},
                               RequestContext(request))
 
-
 def user_login(request):
     """
     This view authenticate user for a username, password
@@ -424,6 +474,8 @@ def user_signup(request):
     :param request: request object having values
     :return None:
     """
+    # todo not implemented yet
+
     return HttpResponse("signup.")
 
 
