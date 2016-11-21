@@ -1,0 +1,77 @@
+{% load staticfiles %}
+
+<html>
+    <head>
+        <title>Interview App</title>
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bootstrap-theme.css' %}">
+        <!-- Custom styles for this template -->
+        <link href="{% static 'css/theme.css' %}" rel="stylesheet">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    </head>
+
+<body>
+
+
+<div class="container" >
+
+    <div class="row">
+         <div class="page-header">
+              <ul class="nav nav-pills" role="tablist">
+                  <li role="presentation" class="active"><a href="{% url 'view_dashboard' %}">Goto Dashboard</a></li>
+                <li role="presentation"><a href="{% url 'view_my_reviews' %}">My Reviews</a></li>
+                <li role="presentation"><a href="{% url 'view_all_reviews' %}">All Reviews</a></li>
+                <li role="presentation"><a href="{% url 'logout' %}">Logout</a></li>
+              </ul>
+         </div>
+    </div>
+
+     <div class="row">
+        {% if user.is_authenticated %}
+        <b> Logged in user is {{ user.username }}! </b>
+        {% endif %}
+        <div class="page-header">
+            <h1>Interviews:</h1>
+        </div>
+
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead>
+                    <th>#</th>
+                    <th>Candidate Name</th>
+                    <th>Interview Status</th>
+                    <th>Created at</th>
+                    {%if show_reviews == "all" %}
+                        <th>Reviewed by</th>
+                    {% endif %}
+                </thead>
+                {% for r in review_list %}
+                <tr>
+                    <td>{{r.id}}</td>
+                    <td>
+                        <a href="{% url 'view_candidate_review'  r.id %}">
+                            {{r.candidate.name}}
+                        </a>
+                    </td>
+                    {% if r.status == "open" %}
+                        <td><span class="label label-success">open</span></td>
+                    {% elif r.status == "closed" %}
+                        <td><span class="label label-danger">closed</span></td>
+                    {% endif %}
+                    <td>{{r.created_at}}</td>
+
+                    {%if show_reviews == "all" %}
+                    <td>{{r.user.username}}</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

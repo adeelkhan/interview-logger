@@ -1,0 +1,93 @@
+{% load staticfiles %}
+
+<html>
+    <head>
+        <title>Interview App</title>
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bootstrap-theme.css' %}">
+        <!-- Custom styles for this template -->
+        <link href="{% static 'css/theme.css' %}" rel="stylesheet">
+
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    </head>
+
+<body>
+
+<div class="container">
+    <div class="row">
+         <div class="page-header">
+              <ul class="nav nav-pills" role="tablist">
+                  <li role="presentation" class="active"><a href="{% url 'view_dashboard' %}">Goto Dashboard</a></li>
+                <li role="presentation"><a href="{% url 'view_my_reviews' %}">My Reviews</a></li>
+                <li role="presentation"><a href="{% url 'view_all_reviews' %}">All Reviews</a></li>
+                <li role="presentation"><a href="{% url 'logout' %}">Logout</a></li>
+              </ul>
+         </div>
+    </div>
+
+    <div class="row">
+        {% if user.is_authenticated %}
+        <b> Logged in user is {{ user.username }}! </b>
+        {% endif %}
+
+
+        <br>
+        <b>Review for Candidate : {{candidate_name}}</b>
+        <br>
+        <b>Interviewer Name : {{reviewer_name}}</b>
+
+
+        <div class="page-header">
+            <h1>Candidate Questions:</h1>
+        </div>
+        <div class="col-md-12">
+            <table class="table table-striped">
+                   <thead>
+                        <th>#</th>
+                        <th>Question Name</th>
+                        <th>Rating</th>
+                        <th>Comments</th>
+                        <th>Response at</th>
+                    </thead>
+
+                    {% for resp in review_responses %}
+                    <tr>
+                        <td>{{resp.question.id}}</td>
+                        <td>{{resp.question.question_text}}</td>
+                        {% load index %}
+                        {% if ratings|index:resp.answer_ratings == 'Not Answered' %}
+                            <td><span class="label label-default">
+                                {{ ratings|index:resp.answer_ratings }}
+                                </span></td>
+                        {% elif ratings|index:resp.answer_ratings == 'Bad' %}
+                            <td><span class="label label-danger">
+                                {{ ratings|index:resp.answer_ratings }}
+                            </span></td>
+                        {% elif ratings|index:resp.answer_ratings == 'Satisfactory' %}
+                            <td><span class="label label-primary">
+                                {{ ratings|index:resp.answer_ratings }}
+                            </span></td>
+                        {% elif ratings|index:resp.answer_ratings == 'Good' %}
+                            <td><span class="label label-success">
+                                {{ ratings|index:resp.answer_ratings }}
+                            </span></td>
+                        {% elif ratings|index:resp.answer_ratings == 'Excellent' %}
+                            <td><span class="label label-warning">
+                                {{ ratings|index:resp.answer_ratings }}
+                            </span></td>
+                        {% endif %}
+
+                        <td>{{resp.comments}}</td>
+                        <td>{{resp.response_at}}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

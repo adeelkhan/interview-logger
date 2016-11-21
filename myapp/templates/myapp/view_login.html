@@ -1,0 +1,40 @@
+{% load staticfiles %}
+
+<html>
+    <head>
+        <title>Interview App</title>
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bootstrap-theme.css' %}">
+
+        <!-- Custom styles for this template -->
+        <!-- Custom styles for this template -->
+        <link href="{% static 'css/theme.css' %}" rel="stylesheet">
+        <link href="{% static 'css/signin.css' %}" rel="stylesheet">
+
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}">
+
+
+    </script>
+
+    </head>
+
+<body>
+
+<div class="container">
+    <form class="form-signin" id="login_form" method="post" action="../login/">
+        {% csrf_token %}
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <label class="sr-only">Username:</label>
+         <input type="text" name="username" value="" class="form-control"  placeholder="Username" required autofocus/>
+        <label class="sr-only">Password:</label>
+        <input type="password" name="password" class="form-control" placeholder="Password" required>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+
+    </form>
+</div>
+
+</body>
+</html>
